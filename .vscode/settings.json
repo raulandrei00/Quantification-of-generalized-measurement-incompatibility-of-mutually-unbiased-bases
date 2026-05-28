@@ -1,0 +1,24 @@
+{
+    "files.exclude": {
+        "**/*.vo": true,
+        "**/*.vok": true,
+        "**/*.vos": true,
+        "**/*.aux": true,
+        "**/*.glob": true,
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true
+    },
+
+    // ---- LaTeX Workshop: stop the editor from "kicking you out" -----------
+    // `files.autoSave: afterDelay` (your user setting) turns every typing
+    // pause into a save, which previously fired a build. Disable auto-build
+    // entirely; trigger builds manually with Ctrl+Alt+B or the TeX side panel.
+    "latex-workshop.latex.autoBuild.run": "never",
+    // Belt-and-braces: don't auto-reveal LaTeX log / badbox notices in the
+    // OUTPUT panel when a manual build runs.
+    "latex-workshop.message.log.show": false,
+    "latex-workshop.message.badbox.show": false
+}

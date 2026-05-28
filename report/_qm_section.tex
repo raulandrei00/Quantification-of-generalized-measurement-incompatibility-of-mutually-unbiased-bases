@@ -1,0 +1,96 @@
+\subsection{Quantum Measurements}
+\label{sec:quantum-measurements}
+
+A quantum measurement is the formal device by which one extracts
+classical information from a quantum state. Each measurement is
+specified by a finite set of \emph{outcomes}
+$\{a\}_{a = 1}^{n}$ together with an operator on the Hilbert
+space~$\mathcal{H}$ for each outcome; the probability of each outcome
+is then read off from the state via the Born rule below. We
+distinguish two levels of generality, projective measurements and the
+strictly larger class of POVMs.
+
+\begin{definition}[Projective measurement (PVM)]
+\label{def:pvm}
+A \emph{projective measurement} on a complex Hilbert space $\mathcal{H}$
+of dimension $d$ is a finite family $\{\Pi_a\}_{a = 1}^{n}$ of
+orthogonal projectors on $\mathcal{H}$,
+\begin{equation}
+  \Pi_a^{\dagger} \;=\; \Pi_a, \qquad
+  \Pi_a \Pi_b \;=\; \delta_{ab}\, \Pi_a, \qquad
+  \sum_{a = 1}^{n} \Pi_a \;=\; I.
+  \label{eq:pvm}
+\end{equation}
+By the spectral theorem, projective measurements are in one-to-one
+correspondence with self-adjoint observables
+$A = \sum_a \lambda_a\, \Pi_a$ on~$\mathcal{H}$, the $\lambda_a$
+being the eigenvalues attached to each outcome.
+\end{definition}
+
+\begin{definition}[Positive operator-valued measure (POVM)]
+\label{def:povm}
+A \emph{positive operator-valued measure} (POVM) on a complex Hilbert
+space $\mathcal{H}$ with outcome set $\{1, \dots, n\}$ is a family
+$\{M_a\}_{a = 1}^{n}$ of Hermitian operators satisfying
+\begin{equation}
+  M_a \;\succeq\; 0 \quad \forall\, a, \qquad
+  \sum_{a = 1}^{n} M_a \;=\; I.
+  \label{eq:povm-defining}
+\end{equation}
+Every projective measurement is a POVM (the $\Pi_a$ are positive,
+Hermitian, and sum to the identity), but the converse fails: a POVM
+element $M_a$ may have rank greater than one and the $M_a$ need not
+mutually commute. POVMs are the most general notion of measurement
+allowed by quantum mechanics; by Naimark's theorem every POVM arises
+as a projective measurement on an enlarged Hilbert space, with the
+extra degrees of freedom subsequently traced out.
+\end{definition}
+
+\begin{definition}[Born rule]
+\label{def:born}
+If the system is prepared in a state described by the density operator
+$\rho$ and a POVM $\{M_a\}$ is performed, the probability of
+observing outcome~$a$ is
+\begin{equation}
+  P(a \mid \rho) \;=\; \text{Tr}(\rho\, M_a).
+  \label{eq:born}
+\end{equation}
+Positivity $M_a \succeq 0$ together with the resolution of the
+identity $\sum_a M_a = I$ guarantees that
+$\{P(a \mid \rho)\}_{a = 1}^{n}$ is a valid probability distribution
+on the outcome set for every density operator~$\rho$.
+\end{definition}
+
+\paragraph{Indexed families of POVMs.}
+In what follows we shall study not a single POVM but \emph{collections}
+of POVMs sharing the same Hilbert space and outcome set, indexed by a
+classical measurement \emph{setting}~$x \in \{1, \dots, m\}$. We
+adopt the standard notation $M^{(x)} = \{M_{a|x}\}_{a = 1}^{n}$ for
+the POVM associated with setting~$x$, so that each $M_{a|x}$ is a
+Hermitian operator on $\mathcal{H}$ satisfying
+\eqref{eq:povm-defining} for every fixed~$x$, and the Born rule
+extends naturally to $P(a \mid x, \rho) = \text{Tr}(\rho\, M_{a|x})$.
+The central question of this report---developed in the next
+subsection and formalised as a semidefinite program in
+Section~\ref{sec:sdp-2qubit}---is to what extent such a collection
+$\{M^{(x)}\}_{x}$ can be realised \emph{simultaneously} by a single
+physical measurement.
+
+\begin{definition}[White-noise mixture of a POVM]
+\label{def:white-noise}
+Given a POVM $\{M_a\}$ on $\mathcal{H} = \mathbb{C}^{d}$ and a noise
+parameter $\eta \in [0, 1]$, the corresponding \emph{$\eta$-noisy}
+POVM has elements
+\begin{equation}
+  M^{\eta}_{a} \;=\; \eta\, M_{a} \;+\; (1 - \eta)\, \text{Tr}(M_a)\,
+                     \frac{I}{d}.
+  \label{eq:noisy-povm}
+\end{equation}
+At $\eta = 1$ the original sharp measurement is recovered; at
+$\eta = 0$ every outcome operator becomes proportional to the
+maximally mixed state $I/d$, so the outcome distribution
+$P(a \mid \rho)$ no longer depends on $\rho$ and the measurement is
+uninformative. The parameter $\eta$ will serve as the quantitative
+figure of merit of measurement incompatibility throughout the rest of
+the report.
+\end{definition}

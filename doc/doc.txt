@@ -1,0 +1,24 @@
+https://qetlab.com/GenPauli
+https://github.com/LucasTendick/DistanceBasedResourceQuantificationSetsMeasurements/blob/main/HelperFunctions/MUBMeasurements.m
+https://quantum-journal.org/papers/q-2023-05-15-1003/pdf/
+https://arxiv.org/pdf/1805.09609
+
+https://journals.aps.org/prl/pdf/10.1103/PhysRevLett.122.050402
+https://journals.aps.org/prl/supplemental/10.1103/PhysRevLett.122.050402/JM_MUB_SM.pdf
+https://www.cvxpy.org/tutorial/functions/index.html
+https://arxiv.org/pdf/2112.06784
+https://github.com/paulskrzypczyk/steeringreview/blob/master/JMPOVMs.m
+https://github.com/nathanieljohnston/QETLAB/blob/master/GenPauli.m
+https://github.com/LucasTendick/DistanceBasedResourceQuantificationSetsMeasurements/blob/main/HelperFunctions/MUBMeasurements.m
+
+
+for writing:
+https://arxiv.org/pdf/1805.09609
+https://arxiv.org/pdf/2112.06784
+https://profmcruz.wordpress.com/wp-content/uploads/2017/08/quantum-computation-and-quantum-information-nielsen-chuang.pdf
+https://webmail.polytechnique.fr/public/pdfjs/web/viewer.jsp?file=https%3A%2F%2Fwebmail.polytechnique.fr%2Fservice%2Fhome%2F~%2F%3Fauth%3Dco%26loc%3Den_US%26id%3D265569%26part%3D3
+https://webmail.polytechnique.fr/public/pdfjs/web/viewer.jsp?file=https%3A%2F%2Fwebmail.polytechnique.fr%2Fservice%2Fhome%2F~%2F%3Fauth%3Dco%26loc%3Den_US%26id%3D57552%26part%3D2
+https://webmail.polytechnique.fr/public/pdfjs/web/viewer.jsp?file=https%3A%2F%2Fwebmail.polytechnique.fr%2Fservice%2Fhome%2F~%2F%3Fauth%3Dco%26loc%3Den_US%26id%3D265569%26part%3D2
+https://moodle.ip-paris.fr/pluginfile.php/246342/mod_resource/content/5/Poly_FMA_2S006_EP.pdf
+https://arxiv.org/pdf/1805.09609
+https://iopscience.iop.org/article/10.1088/1751-8113/49/12/123001/pdf
