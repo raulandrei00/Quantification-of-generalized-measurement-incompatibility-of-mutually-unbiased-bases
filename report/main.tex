@@ -5,7 +5,7 @@
 incompatibility of mutually unbiased bases}
 \newcommand{\authorname}[0]{Raul-Andrei Pop}
 
-\newcommand{\supervisor}[0]{Marc-Olivier Renou, Lucas-Amadeus Tendick}
+\newcommand{\supervisor}[0]{Marc-Olivier Renou and Lucas-Amadeus Tendick}
 \newcommand{\supervisorinstitution}[0]{Inria Paris-Saclay / LIX}
 
 \newcommand{\abstracttext}[0]{%
@@ -44,6 +44,7 @@ incompatibility of mutually unbiased bases}
 \usepackage{graphicx}
 \graphicspath{{./}{../assets/}}              % search current dir, then ../assets/
 \usepackage{wrapfig}
+\usepackage{placeins}                        % \FloatBarrier --- pin floats inside their section
 \usepackage{enumerate}
 \usepackage{paralist}
 \usepackage{xspace}
@@ -129,7 +130,8 @@ incompatibility of mutually unbiased bases}
 {\textit{Advisor:}}
 
 \vspace*{1em}
-\supervisor{}, \supervisorinstitution{}
+\supervisor{}
+\\ \supervisorinstitution{}
 }
 
 \vspace*{2em}
@@ -154,7 +156,7 @@ the known results on the noise-robustness thresholds for the joint
 measurability of $k$ MUBs in prime dimensions, and we will present new 
 numerical results obtained by solving semidefinite programs (SDPs) for generalized
 incompatibility notions where closed-form expressions are not found yet. 
-Throughout generating these numerical results, we will provide a more general framework for quantifying these robustness thresholds by 
+In producing these numerical results, we will provide a more general framework for quantifying these robustness thresholds by 
 parameterizing the SDPs with arbitrary compatibility hypergraphs, which allows us to explore a wider range of compatibility scenarios beyond full joint measurability.
 In an attempt to solve the problem analytically, we find analytical lower bounds for the noise-robustness thresholds on these incompatibility scenarios,
 which match, up to machine precision, the numerical results.
@@ -188,8 +190,8 @@ which match, up to machine precision, the numerical results.
 %======================================================================
 \section{Introduction}
  
-Quantum theory departs from classical physics already at the level of
-measurement: not every collection of observables can be read out at the same
+Quantum theory and classical physics are fundamentally different even at the level of
+measurement: quantum measurements are probabilistic and measuring them disturbs, hence, changes the state. Therefore, not every collection of observables can be read out at the same
 time. Classically, any set of physical quantities can in principle be measured
 jointly to arbitrary precision, so that a single experiment reveals the value
 of all of them. In quantum mechanics this is no longer true. There exist sets
@@ -213,7 +215,7 @@ Instead, a family of POVMs is said to be jointly measurable, or
 \emph{compatible}, if there is a single \emph{parent} POVM whose outcomes can be
 classically post-processed to recover each measurement of the family; if no such
 parent exists the measurements are \emph{incompatible}
-(see Definitions~\ref{def:jm}--\ref{def:incomp}). This definition reduces to
+(see Definition~\ref{def:jm}). This definition reduces to
 commutativity for projective measurements but is strictly more permissive in
 general: there are non-commuting POVMs that nonetheless admit a joint
 measurement~\cite{Guhne2023}.
@@ -235,10 +237,14 @@ onto the $a$-th vector of the $j$-th basis, the $\eta$-noisy MUB measurement has
 elements
 \begin{equation}
   M^{\eta}_{a|j} \;=\; \eta\,\Pi^{(j)}_a \;+\; (1-\eta)\,\frac{I}{d},
-  \qquad j \in [k],\; a \in [d],
+  \qquad j \in \llbracket 1, k \rrbracket,\; a \in \llbracket 1, d \rrbracket,
 \end{equation}
-and one asks for the largest noise parameter $\eta^\star$ below which the family
-becomes jointly measurable. This \emph{white-noise robustness} is the figure of
+which is the general POVM white-noise mixture
+$\eta\,M_a + (1-\eta)\,\mathrm{Tr}(M_a)\,I/d$ of \eqref{eq:noisy-povm}
+specialised to rank-1 projectors -- here $\mathrm{Tr}(\Pi^{(j)}_a) = 1$,
+so the trace factor collapses to unity. One then asks for the largest
+noise parameter $\eta^\star$ below which the family becomes jointly
+measurable. This \emph{white-noise robustness} is the figure of
 merit used throughout this report; crucially, it can be computed by semidefinite
 programming (SDP)~\cite{Designolle2019,Guhne2023}. For the full joint
 measurability of $k$ MUBs in prime-power dimension $d$, Designolle, Skrzypczyk,
@@ -266,7 +272,7 @@ corresponding SDPs, recovering the closed-form values
 of~\cite{Designolle2019}. Second, we provide a general framework in which the
 robustness SDP is parameterised by an \emph{arbitrary} compatibility hypergraph,
 allowing us to interpolate between full joint measurability and weaker
-compatibility scenarios such as the $(k-1)$-wise compatibility of $k$ MUBs.
+compatibility scenarios such as the convex combination of pairwise compatibility of $k$ MUBs.
 Third, we report new numerical values for these generalised incompatibility
 notions, for which no closed-form expression is yet known. Finally, we derive
 analytical lower bounds for the corresponding thresholds and show that they
@@ -275,7 +281,7 @@ underlying optimal strategy is an equal-probability mixture of all pairwise
 sub-experiments.
  
 %======================================================================
-%  Section 2 — Background
+%  Section 2 --- Background
 %======================================================================
 \section{Background}
  
@@ -286,8 +292,8 @@ may depend on their order, a remark that Born and Jordan immediately traced back
 to the matrix nature of observables, $AB \neq BA$~\cite{Guhne2023}. The ensuing
 uncertainty relations, of Heisenberg, Kennard and Robertson, tied
 non-commutativity to the impossibility of preparing states sharply localised
-with respect to two observables at once. It was later realised that Hermitian
-operators are too restrictive to capture all physical measurements, and the
+with respect to two observables at once. It was later realised that the notion of observables associated to projective measurements
+is too restrictive to capture all physical measurements, and the
 notion of a measurement was generalised to POVMs. For this larger class the
 commutator no longer tells the whole story, and over the past two decades joint
 measurability has emerged as the central, operationally grounded notion of
@@ -305,7 +311,7 @@ in composite (non-prime-power) dimensions is a long-standing open problem; the
 smallest open case is $d = 6$, where despite considerable effort no more than
 three MUBs have ever been found and it is widely conjectured that no fourth one
 exists. In this report we work exclusively in prime dimensions $d \in
-\{2,3,5,7\}$, where the Wootters--Fields construction provides explicit complete
+\{2,3,5,7, 11\}$, where the Wootters--Fields construction provides explicit complete
 sets to build on. Beyond their role as extremal incompatible measurements, MUBs
 are ubiquitous in quantum information processing, appearing in quantum
 tomography, uncertainty relations, quantum key distribution and entanglement
@@ -377,7 +383,7 @@ combination of families respecting the structures $C_i$.
            $\mathcal{C}_A = [(1,2)]$,
            $\mathcal{C}_B = [(1,2),(3,4)]$,
            $\mathcal{C}_C = [(1,2),(1,3),(2,4),(3,4)]$,
-           $\mathcal{C}_D = [(1,2,3),(2,4)]$.}
+           $\mathcal{C}_D = [(1,2,3),(2,4)]$. The all-pair hypergraph studied in depth in this work corresponds to C.}
   \label{fig:hypergraphs}
 \end{figure} The canonical instance is genuine
 $n$-wise incompatibility, in which a set of $n$ measurements cannot be
@@ -390,21 +396,30 @@ quantify incompatibility scenarios for MUBs that lie between full joint
 measurability and full independence.
  
 %======================================================================
+
 \section{Outline and goal of the project}
 
-The goal of this project is to study the numerical properties of the noise-robustness thresholds for the joint measurability and for the general 
-$k$-wise incompatibility of MUB measurements. Towards this, we will reproduce the known results for joint measurability, while providing new numerical results for the generalised incompatibility scenarios. 
-We will also derive an analytical lower bound for the $k$-wise incompatibility case and show tightness of this bound up to computational precision.
+The goal of this project is to study, both numerically and analytically, the noise-robustness thresholds that quantify how incompatible mutually unbiased bases (MUBs) are as quantum measurements. Incompatibility is treated here not as a binary property but as a quantitative one: by mixing each MUB measurement with white noise at level $\eta \in [0,1]$ and asking for the largest $\eta$ below which the noisy family admits a given compatibility structure, we obtain a sharp figure of merit $\eta^\star$ that can in principle be computed by semidefinite programming. Within this framework, our objectives are the following.
 
+\paragraph{Reproducing the joint-measurability baseline.} We first reproduce the known noise-robustness thresholds $\eta^\star(k,d)$ for the full joint measurability of $k$ MUBs in prime dimension $d$, derived in closed form by Designolle et al.~\cite{Designolle2019} for the special cases $k=2$ and $k=d+1$. Concretely, we formulate the corresponding SDP from scratch, implement it in CVXPY, and verify that the solver recovers the analytical values to within $10^{-4}$ across the full range of $(k,d)$ that is computationally tractable. This step both validates our implementation and produces the reference table against which the generalised scenarios are compared.
 
+\paragraph{Generalising to arbitrary compatibility hypergraphs.} Following the hypergraph formalism of Quintino et al.~\cite{Quintino2019}, we then design and implement a single SDP whose constraints are parameterised by an arbitrary compatibility hypergraph $\mathcal{C}$. Each hyperedge of $\mathcal{C}$ specifies a subset of measurements that must admit a common parent POVM, while the remaining measurements in each branch are left as independent POVMs; the SDP searches for the largest $\eta$ such that the noisy MUB family decomposes as a convex mixture of such branches. The trivial hypergraph $\mathcal{C} = \{(0,1,\dots,k-1)\}$ recovers full joint measurability as a special case, so the standard problem becomes the simplest instance of a much broader family of compatibility scenarios that our code handles uniformly.
 
-\newpage
+\paragraph{Producing new numerical thresholds for the all-pairs hypergraph.} Using this general framework, we compute new noise-robustness thresholds for the all-pairs compatibility hypergraph, in which the $k$ measurements are required to be only pairwise---rather than fully---jointly measurable, in a convex-mixture sense. Because this SDP scales only as $O(k^3 d^2)$ in the number of matrix variables, rather than as $O(d^k)$ for the full-JM SDP, we are able to populate a substantially larger range of $(k,d)$ values than is feasible for the joint-measurability case, up to $k=9$ in dimension $d=11$.
+
+\paragraph{Deriving and certifying an analytical lower bound.} Finally, we exploit the symmetry of the MUB family to construct an explicit feasible point of the all-pairs SDP, given by the equal-weight mixture of all $\binom{k}{2}$ pairwise strategies. Combining this construction with the affineness of the white-noise map and the closed-form pairwise threshold $\eta^\star(2,d)$ from~\cite{Designolle2019}, we obtain the analytical lower bound
+\begin{equation}
+    \eta^\star_{\mathrm{pair}}(k,d) \;\geq\; 1 - \frac{\sqrt{d}}{k(\sqrt{d}+1)}.
+\end{equation}
+This bound is monotonically increasing in $k$, in sharp contrast to the full-JM threshold which decreases in $k$, and it matches our numerical SDP values to solver precision in every case we tested. The agreement strongly suggests that the equal-weight pairwise mixture is in fact optimal for this hypergraph, and that the bound is tight.
+
+% \newpage
 \section{Definitions and Concepts}
 
 \subsection{Hermitian operators}
 
 The definitions in this subsection are standard and follow the
-presentation of \cite{EP_FMA2S006}; we include them here for
+presentation of \cite{Quantum-Computation-and-Quantum-Information}; we include them here for
 self-containedness and to fix the notation used in the rest of the
 report.
 
@@ -414,7 +429,7 @@ is called a complex inner product space, or a complex pre-Hilbert space.
 \end{definition}
 
 \begin{definition}[Hermitian space]
-  A finite dimensional pre-Hilbert space is called a Hermitian space.
+  A finite-dimensional pre-Hilbert space is called a Hermitian space.
 \end{definition}
 
 \begin{definition}[Cauchy sequence]
@@ -450,11 +465,6 @@ or, equivalently,
 $\langle \phi | A\psi \rangle = \langle A\phi | \psi \rangle$
 for all $\phi, \psi \in \mathcal{H}$.
 \end{definition}
-
-\begin{definition}[Positive semidefinite operator]
-  Let $\mathcal{H}$ be a complex Hilbert space. A linear operator $A : \mathcal{H} \to \mathcal{H}$ is called positive semidefinite if for all $\psi \in \mathcal{H}$, we have $\langle \psi | A\psi \rangle \geq 0$.
-\end{definition}
-
 In finite dimension $\mathcal{H} = \mathbb{C}^{d}$, this reduces to the matrix
 condition $A_{ij} = \overline{A_{ji}}$. Hermitian operators have real
 eigenvalues and an orthonormal eigenbasis, which is why they model
@@ -463,21 +473,50 @@ physical observables in quantum mechanics.
 In this study we are only concerned with finite-dimensional Hilbert spaces. While we will use the term "Hilbert space", it is important to remember that 
 the spaces we are working with are also Hermitian spaces.
 
+\begin{definition}[Positive semidefinite operator]
+  Let $\mathcal{H}$ be a complex Hilbert space. A linear operator $A : \mathcal{H} \to \mathcal{H}$ is called positive semidefinite if for all $\psi \in \mathcal{H}$, we have $\langle \psi | A\psi \rangle \geq 0$.
+\end{definition}
+
+
 \subsection{Quantum states, density operators and quantum measurements}
+A quantum state is a mathematical object that fully describes the quantum
+mechanical state of a physical system. It can be represented by a state vector in a complex Hilbert space or by
+a density operator.
+\begin{definition}[Quantum Bit (Qubit)]
+  A qubit is a linear combination of the (orthonormal) computational basis states $\ket{0}$ and $\ket{1}$ in a two-dimensional complex Hilbert space $\mathcal{H} = \mathbb{C}^2$. A general state of a qubit can be written as
+  \begin{equation}
+    \ket{\psi} = \alpha \ket{0} + \beta \ket{1},
+  \end{equation}
+  where $\alpha, \beta \in \mathbb{C}$ and $|\alpha|^2 + |\beta|^2 = 1$.
+  Upon measuring the qubit in the computational basis, the outcome will be $\ket{0}$ with probability $|\alpha|^2$ and $\ket{1}$ with probability $|\beta|^2$.
+
+
+\end{definition}
 
 \begin{definition}[Quantum state]
 A quantum state can be described by a state vector $\ket{\psi}$ in a complex Hilbert space $\mathcal{H}$, where $\ket{\psi}$ is a unit vector (i.e., $\langle \psi | \psi \rangle = 1$). The state vector represents the pure state of a quantum system.  
 \end{definition}
 
+\begin{definition}[Pure state]
+  A pure state is a quantum state that can be represented by a state vector $\ket{\psi}$ in a complex Hilbert space. It is called pure because it cannot be expressed as a convex combination of other states. A pure state corresponds to a rank-1 projector in the density operator formalism, i.e., $\rho = \ket{\psi}\bra{\psi}$.
+\end{definition}
+
+% \begin{definition}[Density operator]
+% A density operator (or density matrix) $\rho$ is a positive semidefinite operator on
+% a complex Hilbert space $\mathcal{H}$ with trace equal to 1, i.e., $\rho \geq 0$ and $\text{Tr}(\rho) = 1$. Density operators can represent both pure states (when $\rho$ is a rank-1 projector) and mixed states (when $\rho$ is a convex combination of pure states).
+% \end{definition}
 \begin{definition}[Density operator]
-A density operator (or density matrix) $\rho$ is a positive semidefinite operator on
-a complex Hilbert space $\mathcal{H}$ with trace equal to 1, i.e., $\rho \geq 0$ and $\text{Tr}(\rho) = 1$. Density operators can represent both pure states (when $\rho$ is a rank-1 projector) and mixed states (when $\rho$ is a convex combination of pure states).
+  A density operator (or density matrix) $\rho$ is a positive semidefinite operator on a complex Hilbert space $\mathcal{H}$ with trace equal to 1, i.e., $\rho \geq 0$ and $\text{Tr}(\rho) = 1$. Density operators can represent both pure states (when $\rho$ is a rank-1 projector) and mixed states (when $\rho$ is a convex combination of pure states).
+  For a quantum state described by the set $\{p_i, \ket{\psi_i}\}$, where $p_i$ are probabilities and $\ket{\psi_i}$ are pure states, the corresponding density operator is given by
+  \begin{equation}
+    \rho = \sum_i p_i \ket{\psi_i}\bra{\psi_i}.
+  \end{equation} 
 \end{definition}
 
 \subsection{Mutually unbiased basis (MUBs)}
 
 \begin{definition}[Basis]
-  Let $\mathcal{H}$ be a finite complex Hilbert space, with $dim(\mathcal{H}) = d$. A set of vectors $\mathcal{B} = \{\ket{b_i}\}_{i \in I}$ is called a basis of $\mathcal{H}$ if every vector $\ket{\psi} \in \mathcal{H}$ can be uniquely expressed as a linear combination of the vectors in $\mathcal{B}$, i.e., there exist unique coefficients $c_i \in \mathbb{C}$ such that
+  Let $\mathcal{H}$ be a finite-dimensional complex Hilbert space, with $dim(\mathcal{H}) = d$. A set of vectors $\mathcal{B} = \{\ket{b_i}\}_{i \in I}$ is called a basis of $\mathcal{H}$ if every vector $\ket{\psi} \in \mathcal{H}$ can be uniquely expressed as a linear combination of the vectors in $\mathcal{B}$, i.e., there exist unique coefficients $c_i \in \mathbb{C}$ such that
   \begin{equation}
     \ket{\psi} = \sum_{i \in I} c_i \ket{b_i}.
   \end{equation}
@@ -498,33 +537,6 @@ a complex Hilbert space $\mathcal{H}$ with trace equal to 1, i.e., $\rho \geq 0$
     |\langle b_i | b'_j \rangle|^2 = \frac{1}{d}.
   \end{equation}
   A set of orthonormal bases $\{\mathcal{B}_1, \ldots, \mathcal{B}_k\}$ is called mutually unbiased if every pair of distinct bases in the set is mutually unbiased.
-\end{definition}
-
-\subsection{Quantum States}
-\begin{definition}[Quantum Bit (Qubit)]
-  A qubit is a linear combination of the (orthonormal) computational basis states $\ket{0}$ and $\ket{1}$ in a two-dimensional complex Hilbert space $\mathcal{H} = \mathbb{C}^2$. A general state of a qubit can be written as
-  \begin{equation}
-    \ket{\psi} = \alpha \ket{0} + \beta \ket{1},
-  \end{equation}
-  where $\alpha, \beta \in \mathbb{C}$ and $|\alpha|^2 + |\beta|^2 = 1$.
-  Upon measuring the qubit in the computational basis, the outcome will be $\ket{0}$ with probability $|\alpha|^2$ and $\ket{1}$ with probability $|\beta|^2$.
-
-
-\end{definition}
-\begin{definition}[Quantum state]
-  A quantum state is a mathematical object that fully describes the quantum mechanical state of a physical system. It can be represented by a state vector in a complex Hilbert space or by a density operator. 
-\end{definition}
-
-\begin{definition}[Pure state]
-  A pure state is a quantum state that can be represented by a state vector $\ket{\psi}$ in a complex Hilbert space. It is called pure because it cannot be expressed as a convex combination of other states. A pure state corresponds to a rank-1 projector in the density operator formalism, i.e., $\rho = \ket{\psi}\bra{\psi}$.
-\end{definition}
-
-\begin{definition}[Density operator]
-  A density operator (or density matrix) $\rho$ is a positive semidefinite operator on a complex Hilbert space $\mathcal{H}$ with trace equal to 1, i.e., $\rho \geq 0$ and $\text{Tr}(\rho) = 1$. Density operators can represent both pure states (when $\rho$ is a rank-1 projector) and mixed states (when $\rho$ is a convex combination of pure states).
-  For a quantum state described by the set $\{p_i, \ket{\psi_i}\}$, where $p_i$ are probabilities and $\ket{\psi_i}$ are pure states, the corresponding density operator is given by
-  \begin{equation}
-    \rho = \sum_i p_i \ket{\psi_i}\bra{\psi_i}.
-  \end{equation} 
 \end{definition}
 
 \subsection{Quantum Measurements}
@@ -562,7 +574,7 @@ A \emph{positive operator-valued measure} (POVM) on a complex Hilbert
 space $\mathcal{H}$ with outcome set $\{1, \dots, n\}$ is a family
 $\{M_a\}_{a = 1}^{n}$ of Hermitian operators satisfying
 \begin{equation}
-  M_a \;\succeq\; 0 \quad \forall\, a, \qquad
+  M_a \;\geq\; 0 \quad \forall\, a, \qquad
   \sum_{a = 1}^{n} M_a \;=\; I.
   \label{eq:povm-defining}
 \end{equation}
@@ -584,7 +596,7 @@ observing outcome~$a$ is
   P(a \mid \rho) \;=\; \text{Tr}(\rho\, M_a).
   \label{eq:born}
 \end{equation}
-Positivity $M_a \succeq 0$ together with the resolution of the
+Positivity $M_a \geq 0$ together with the resolution of the
 identity $\sum_a M_a = I$ guarantees that
 $\{P(a \mid \rho)\}_{a = 1}^{n}$ is a valid probability distribution
 on the outcome set for every density operator~$\rho$.
@@ -624,6 +636,12 @@ figure of merit of measurement incompatibility throughout the rest of
 the report.
 \end{definition}
 
+\begin{lemma}[Affineness]
+The map $\eta \mapsto M^\eta = \eta M + (1-\eta)\,\mathrm{Tr}(M)\,\frac{I}{d}$ is affine, so for any probabilities $\{q_b\}$ and noise levels $\{\eta_b\}$,
+\[
+\sum_b q_b\, M^{\eta_b} \;=\; M^{\,\sum_b q_b \eta_b}.
+\]
+\end{lemma}
 
 %------------------------------
 % TODO: born rule, Tr[...]    |
@@ -633,7 +651,7 @@ the report.
 \subsection{Joint Measurability and Incompatibility}
 
 \begin{definition}[Joint measurability] \label{def:jm}
-  A set of quantum measurements (POVMs) $\{ M_{a|x} \}$ is said to be jointly measurable if there exists a single measurement (POVM) $\{G_\lambda\}$ such that the outcomes of $G$ can be post-processed to reproduce the statistics of each $M_i$.
+  A set of quantum measurements (POVMs) $\{ M_{a|x} \}$ is said to be jointly measurable if there exists a single measurement (POVM) $\{G_\lambda\}$ such that the outcomes of $G$ can be post-processed to reproduce the statistics of each $M_{a|x}$.
   That is, there exists a set of conditional probabilities $p(a|x, \lambda)$ such that for all $x$ and $a$, we have
   \begin{equation}
     M_{a|x} = \sum_{\lambda} p(a|x, \lambda) G_{\lambda},
@@ -642,15 +660,10 @@ the report.
   measurement of the set $\{M_{a|x}\}$.
 \end{definition}
 
-\begin{definition}[Measurement incompatibility]\label{def:incomp}
-  A set of quantum measurements (POVMs) $\{ M_{a|x} \}$ is said to be incompatible if it is not jointly measurable, i.e., if there does not exist a single measurement (POVM) $\{G_\lambda\}$ and a set of conditional probabilities $p(a|x, \lambda)$ such that for all $x$ and $a$, we have
-  \begin{equation}
-    M_{a|x} = \sum_{\lambda} p(a|x, \lambda) G_{\lambda}.
-  \end{equation}
-\end{definition}
+A set of quantum measurements is \textbf{incompatible} if it is not jointly measurable.
 
 \subsection{Semi Definite Programming (SDP)}
-The feasibility and noise-robustness of Measurement compatibility can be modeled as an SDP and computationally solved by convex optimization libraries, for example in Python or MatLAB.
+The feasibility and noise-robustness of measurement compatibility can be modeled as an SDP and computationally solved by convex optimization libraries, for example in Python or MatLAB.
 For this reason, we will briefly review the definition of an SDP and some prerequisite concepts, and in the next section we will model our systems as SDPs.
 
 \begin{definition}[Positive semidefiniteness of a Hermitian operator]
@@ -658,12 +671,12 @@ For this reason, we will briefly review the definition of an SDP and some prereq
   \begin{equation}
     \langle \psi | A | \psi \rangle \geq 0.
   \end{equation}
-  We will denote this by $A \succeq 0$.
+  We will denote this by $A \geq 0$.
 \end{definition}
 
 Note that we can further extend this (non-total) ordering of Hermitian operators like so
 \begin{equation}
-  A \succeq B \quad \text{if and only if} \quad A - B \succeq 0.
+  A \geq B \quad \text{if and only if} \quad A - B \geq 0.
 \end{equation}
 
 \begin{definition}[Semidefinite Program]
@@ -672,7 +685,7 @@ Note that we can further extend this (non-total) ordering of Hermitian operators
     \begin{aligned}
       \text{minimize} \;\;& \text{Tr}(C X) \\[2pt]
       \text{subject to} \;\;& \text{Tr}(A_i X) = b_i, \quad i = 1, \ldots, m, \\[2pt]
-                          & X \succeq 0,
+                          & X \geq 0,
     \end{aligned}
   \end{equation}
   where $X$ is the variable being optimized over, $C$ and $A_i$ are given Hermitian matrices, and $b_i$ are given scalars.
@@ -720,7 +733,7 @@ Hermitian matrices $G_{++}, G_{+-}, G_{-+}, G_{--}$:
   \text{find}   \;\;& G_{\lambda_X \lambda_Z} \;\in\; \mathbb{C}^{2 \times 2}
                       \quad \forall\, (\lambda_X, \lambda_Z)
                       \in \{+, -\}^{2}, \\[2pt]
-  \text{s.t.}   \;\;& G_{\lambda_X \lambda_Z} \;\succeq\; 0
+  \text{s.t.}   \;\;& G_{\lambda_X \lambda_Z} \;\geq\; 0
                       \quad \forall\, (\lambda_X, \lambda_Z), \\[2pt]
                   \;\;& \sum_{\lambda_X, \lambda_Z}
                         G_{\lambda_X \lambda_Z} \;=\; I, \\[2pt]
@@ -764,7 +777,7 @@ The resulting optimization program is
   \text{s.t.}   \;\;& G_{\lambda_X \lambda_Z} \;\in\; \mathbb{C}^{2 \times 2}
                       \quad \forall\, (\lambda_X, \lambda_Z)
                       \in \{+, -\}^{2}, \\[2pt]
-                  \;\;& G_{\lambda_X \lambda_Z} \;\succeq\; 0
+                  \;\;& G_{\lambda_X \lambda_Z} \;\geq\; 0
                       \quad \forall\, (\lambda_X, \lambda_Z), \\[2pt]
                   \;\;& \sum_{\lambda_X, \lambda_Z}
                         G_{\lambda_X \lambda_Z} \;=\; I, \\[2pt]
@@ -796,44 +809,28 @@ hypergraphs.
 
 % EXPLAIN what is happening in this sdp
 
-\paragraph{}
-\begin{wrapfigure}{r}{0.40\textwidth}
-  \vspace{-0.6em}
-  \centering
-  \includegraphics[width=0.38\textwidth]{convex-3-measurements}
-  \caption{Convex-combination view of joint measurability for three
-           noisy measurements, reproduced from Quintino
-           \emph{et al.}~\cite{Quintino2019}: the family is jointly
-           measurable iff it lies in the convex hull (shaded) of
-           single-branch sub-families. $JM$ illustrates the set of
-           fully jointly measurable families of MUBs, while $JM_{12}$,
-           $JM_{13}$, $JM_{23}$ represent the sets of fully jointly
-           measurable families for the respective pairs of measurements.}
-  \label{fig:convex-3-measurements}
-\end{wrapfigure}
+
 To generalize the SDP to $k$ noisy MUB measurements with $m$ outcomes in dimension $d$, we replace the binary settings and outcomes of the previous example with $k$ settings and $m$ outcomes per setting, and we replace the noisy Pauli measurements with noisy MUB measurements defined as
 \begin{equation}
   M^{\eta}_{a|j} \;=\; \eta\, \Pi^{(j)}_{a}
                   \;+\; (1-\eta)\, \frac{I}{d},
-  \qquad j \in [k],\;\; a \in [m],
+  \qquad j \in \llbracket 1, k \rrbracket,\;\; a \in \llbracket 1, m \rrbracket,
   \label{eq:noisy-mub-kmub}
 \end{equation}where $\Pi^{(j)}_{a}$ are the projectors onto the $a$-th vector of the $j$-th MUB. The parent POVM $\{G_{\lambda}\}$ now has $m^k$ outcomes, indexed by $k$-tuples $\lambda_1 \cdots \lambda_k$ of outcomes, one for each setting. The marginal constraints now require summing out all outcomes of the parent POVM except the one corresponding to the
-setting of interest, which is done by summing over all $k$-tuples $\lambda_1 \cdots \lambda_k$ such that $\lambda_j = a$ for the setting $j$ and outcome $a$ of interest. Geometrically (Figure~\ref{fig:convex-3-measurements}), the feasibility of this SDP amounts to asking whether the noisy family $\{M^{\eta}_{a|j}\}$ lies in the convex hull of the single-branch jointly-measurable families.
-.~\ref{fig:convex-3-measurements} illustrates geometrically why the noise-robustness threshold for full joint measurability is lower than the noise-robustness threshold for pairwise joint measurability: the set of fully jointly measurable families of MUBs (JM) is a strict subset of the convex hull of the pairwise jointly measurable families $(JM_{12}, JM_{13}, JM_{23})$.
-
+setting of interest, which is done by summing over all $k$-tuples $\lambda_1 \cdots \lambda_k$ such that $\lambda_j = a$ for the setting $j$ and outcome $a$ of interest.
 \begin{equation}
 \begin{aligned}
   \text{maximize} \;\;& \eta \;\in\; [0,1] \\[2pt]
   \text{s.t.}   \;\;& G_{\lambda_1 \cdots \lambda_k} \;\in\; \mathbb{C}^{d \times d}
                       \quad \forall\, (\lambda_1, \dots, \lambda_k)
-                      \in [m]^{k}, \\[2pt]
-                  \;\;& G_{\lambda_1 \cdots \lambda_k} \;\succeq\; 0
+                      \in \llbracket 1, m \rrbracket^{k}, \\[2pt]
+                  \;\;& G_{\lambda_1 \cdots \lambda_k} \;\geq\; 0
                       \quad \forall\, (\lambda_1, \dots, \lambda_k), \\[2pt]
                   \;\;& \sum_{\lambda_1, \dots, \lambda_k}
                         G_{\lambda_1 \cdots \lambda_k} \;=\; I, \\[2pt]
                   \;\;& \sum_{\substack{\lambda_1, \dots, \lambda_k \\ \lambda_j = a}}
                         G_{\lambda_1 \cdots \lambda_k} \;=\; M^{\eta}_{a | j}
-                        \qquad\; \forall\, j \in [k],\ \forall\, a \in [m].
+                        \qquad\; \forall\, j \in \llbracket 1, k \rrbracket,\ \forall\, a \in \llbracket 1, m \rrbracket.
 \end{aligned} % TO CHANGE: this is slop, or not rly
 \label{eq:sdp-robustness-kmub}
 \end{equation}
@@ -854,29 +851,46 @@ the standard $k$-wise joint-measurability robustness SDP whose optimal
 value populates Table~\ref{tab:compat-prime}.
 
 %\newpage
-\subsection{Generalization of the robustness SDP to pairwise Jointly measurable hypergraphs}
+\subsection{Generalization of the robustness SDP to pairwise jointly measurable hypergraphs}\label{sec:generalization-pairwise-jm}
+
+\paragraph{}
+\begin{wrapfigure}{r}{0.40\textwidth}
+  \vspace{-0.6em}
+  \centering
+  \includegraphics[width=0.38\textwidth]{convex-3-measurements}
+  \caption{Convex-combination view of joint measurability for three
+           noisy measurements, reproduced from Quintino
+           \emph{et al.}~\cite{Quintino2019}: the family is jointly
+           measurable iff it lies in the convex hull (shaded) of
+           single-branch sub-families. $JM$ illustrates the set of
+           fully jointly measurable families of MUBs, while $JM_{12}$,
+           $JM_{13}$, $JM_{23}$ represent the sets of families in which
+            the indicated pair is jointly measurable, with no constraint on the third measurement.}
+  \label{fig:convex-3-measurements}
+\end{wrapfigure}
 
 Now that we have established certain robustness bounds for the joint measurability of $k$ MUBs, 
-we can explore a more general notion of compatibility, which is the $(k-1)$-wise compatibility of $k$ MUBs.
-More specifically, we are interested in finding a strategy of $(k-1)$ measurements that would yield a valid and identically distributed measurement for each of the $k$ MUBs, and we want to find the noise-robustness threshold for this compatibility scenario.
-This is a natural relaxation of the full joint measurability scenario, and it is quite clear, and proved in the following, that this specific program will yield higher robustness thresholds.
+we can explore a more general notion of compatibility, which is the $k$-wise incompatibility of $k$ MUBs.
+More specifically, we are interested in finding a probabilistic mixture of strategies, in each of which only one pair of the k measurements is jointly measured and the remaining k-2 are measured independently that would yield a valid and identically distributed measurement for each of the $k$ MUBs, and we want to find the noise-robustness threshold for this compatibility scenario.
+This is a natural generalization of the full joint measurability scenario, and it is quite clear, and proved in the following, that this specific program will yield higher robustness thresholds.
 \newline 
 First, let us generalize the notion of genuine incompatibility from ~\cite{Quintino2019} to genuine k-wise incompatibility:
 \newline
 A set of
 $k$ measurements is genuinely $k$-wise incompatible
-when it cannot be written as a convex combination of $k-1$ 
-measurements that are pairwise compatible on different
-partitions. By this, we mean choosing a measurement strategy in which we probabilistically choose a pair of measurements
-$i \neq j$ with $i, j \leq k$ and perform a joint measurement for that pair while measuring the rest individually.
+when it cannot be written as a convex combination of strategies of $k-1$ 
+measurements where 2 are jointly measured and the rest are measured individually. By this, we mean choosing a measurement strategy in which we probabilistically choose a pair of measurements
+$i \neq j$ with $i, j \in \llbracket 1, k \rrbracket $ and perform a joint measurement for that pair while measuring the rest individually.
 \newline
-More formally, we have a probability matrix $P_{ij}$ with $i, j \in \llbracket 0, k \rrbracket $ and $i \neq j$, such that $\sum_{i < j} P_{ij} = 1$, and we have a set of parent POVMs $\{G^{(ij)}_{\lambda}\}$ for each pair of measurements $i \neq j$, such that the marginals of $G^{(ij)}_{\lambda}$ recover the noisy MUB measurements at settings $i$ and $j$.
+More formally, we have a probability matrix $P_{ij}$ with $i, j \in \llbracket 1, k \rrbracket $ and $i \neq j$, such that $\sum_{i < j} P_{ij} = 1$, and we have a set of parent POVMs $\{G^{(ij)}_{\lambda}\}$ for each pair of measurements $i \neq j$, such that the marginals of $G^{(ij)}_{\lambda}$ recover the noisy MUB measurements at settings $i$ and $j$.
+\newline Geometrically (Figure~\ref{fig:convex-3-measurements}), the feasibility of this SDP amounts to asking whether the noisy family $\{M^{\eta}_{a|j}\}$ lies in the convex hull of the single-branch jointly-measurable families.
+Figure ~\ref{fig:convex-3-measurements} illustrates why the noise-robustness threshold for full joint measurability is lower than the noise-robustness threshold for pairwise joint measurability: the set of fully jointly measurable families of MUBs (JM) is a strict subset of the convex hull of the pairwise jointly measurable families $(JM_{12}, JM_{13}, JM_{23})$.
 \newline
 The baseline program becomes: 
 \newline
 \begin{center}
 \begin{align*}
-&\text{find}      & & J_{a|x}^{(ij)},\ p_{ij},\ E_\lambda^{(ij)}\ \text{for all } i,j \in \llbracket 0,k \rrbracket,\ i<j \\
+&\text{find}      & & J_{a|x}^{(ij)},\ p_{ij},\ E_\lambda^{(ij)}\ \text{for all } i,j \in \llbracket 1,k \rrbracket,\ i<j \\
 &\text{such that} & & E_\lambda^{(ij)} \geq 0,\quad p_{ij} \geq 0, \\
 &                 & & M_{a|x} = \sum_{i<j} p_{ij} J_{a|x}^{(ij)}, \\
 &                 & & J_{a|x}^{(ij)} \geq 0,\ \forall a,x;\ \sum_a J_{a|x}^{(ij)} = \mathds{1} ,\ \forall x, \\
@@ -885,13 +899,13 @@ The baseline program becomes:
 \end{center}
 where $D_\lambda(a|x)$ is the deterministic response function for the parent POVM $G^{(ij)}_{\lambda}$, and the constraints ensure that each $J_{a|x}^{(ij)}$ is a valid measurement strategy that recovers the noisy MUB measurements at settings $i$ and $j$ as marginals, and that the overall decomposition of $M_{a|x}$ into these pairwise strategies is valid.
 \newline
-Notice that we cannot yet use convex optimization to solve this program, since the constraints are not \textbf{linear} due to the product of \textbf{variables} $p_{ij}$ and $J_{a|x}^{(ij)}$ in the decomposition of $M_{a|x}$.
+Notice that we cannot yet use convex optimization to solve this program, since the constraints are \textbf{not linear} due to the product of \textbf{variables} $p_{ij}$ and $J_{a|x}^{(ij)}$ in the decomposition of $M_{a|x}$.
 However, we can easily fix this by integrating the probability matrix $p$ into the Joint measurement term $J$:
 
 
 \begin{center}
 \begin{align*}
-&\text{find}      & & J_{a|x}^{(ij)},\ p_{ij},\ E_\lambda^{(ij)}\ \text{for all } i,j \in \llbracket 0,k \rrbracket,\ i<j \\
+&\text{find}      & & J_{a|x}^{(ij)},\ p_{ij},\ E_\lambda^{(ij)}\ \text{for all } i,j \in \llbracket 1,k \rrbracket,\ i<j \\
 &\text{such that} & & E_\lambda^{(ij)} \geq 0,\quad p_{ij} \geq 0, \\
 &                 & & M_{a|x} = \sum_{i<j} J_{a|x}^{(ij)}, \\
 &                 & & J_{a|x}^{(ij)} \geq 0,\ \forall a,x;\ \sum_a J_{a|x}^{(ij)} = p_{ij} \mathds{1} ,\ \forall x, \\
@@ -901,7 +915,7 @@ However, we can easily fix this by integrating the probability matrix $p$ into t
 \end{center}
 
 In order to quantify the noise-robustness threshold $\eta^*$ for the $k$-wise compatibility scenario, we 
-add the maximization constraint and 
+add the maximization constraint and model the following constraints:
 \begin{center}
   \begin{equation}
     \begin{aligned}
@@ -916,14 +930,14 @@ we can further simplify the program as follows:
 \begin{center}
 \begin{align*}
 &\text{maximize} & & \eta \in [0,1] \\
-&\text{such that} & & E_\lambda^{(ij)} \geq 0, \sum_\lambda E_\lambda^{(ij)} = \frac{\mathds{1}}{d} \sum_\lambda Tr(E_\lambda^{(ij)}),\ \forall i,j \in \llbracket 0,k \rrbracket,\ i<j, \\
+&\text{such that} & & E_\lambda^{(ij)} \geq 0, \sum_\lambda E_\lambda^{(ij)} = \frac{\mathds{1}}{d} \sum_\lambda Tr(E_\lambda^{(ij)}),\ \forall i,j \in \llbracket 1,k \rrbracket,\ i<j, \\
 & & & \frac{1}{d} \sum_\lambda \sum_{i < j} Tr(E_\lambda^{(ij)}) = 1 \\ 
  & & & \eta M_{a|x} + (1-\eta) Tr(M_{a|x}) \frac{\mathds{1}}{d} \geq \sum_\lambda D_\lambda(a|x) \sum_{i \neq x} E_\lambda^{(ix)}\ \forall a,x.
 \end{align*}
 \end{center}
 
 Where we extend $E$ such that $E_\lambda^{(ij)} = E_\lambda^{(ji)}$ for $i > j$.
-\newline This state of the program is easy to solve by a convex optimization engine as well as to write as an SDP for general $k$, which has been done in the \texttt{robustness\_joint\_decomp} routine of Appendix~\ref{app:robustness-code} (Listing~\ref{lst:robustness-joint-decomp}), which takes as input the compatibility hypergraph produced by \texttt{hypergraph\_compatible(k)}, and builds the convex program above with CVXPY, delegating the actual optimization to a standard interior-point SDP solver such as CLARABEL, SCS, or MOSEK.
+\newline This state of the program is easy to solve by a convex optimization engine as well as to write as an SDP for general $k$, which has been done in the \texttt{robustness\_hypergraph} routine of Appendix~\ref{app:robustness-code} (Listing~\ref{lst:robustness-hypergraph}), which takes as input the compatibility hypergraph produced by \texttt{hypergraph\_pair(k)}, and builds the convex program above with CVXPY, delegating the actual optimization to a standard interior-point SDP solver such as CLARABEL, SCS, or MOSEK.
 
 We then identify a natural lower bound $\eta^*$ for the noise-robustness threshold of this $(k-1)$-wise compatibility scenario, 
 which is obtained by an equal probability mixture of all $\binom{k}{2}$ pairwise strategies, i.e. $p_{ij} = \frac{1}{\binom{k}{2}}$ for all $i < j$.
@@ -934,54 +948,96 @@ Designolle et al.~\cite{Designolle2019}, which is a tight bound for the particul
   \label{eq:designolle-k2}
 \end{equation}
 
+Call a branch $(j,\ell)$ \textbf{active for setting $x$} if $x \in \{j,\ell\}$, and \textbf{inactive} otherwise. In an active branch, setting $x$ is presented at noise level $\eta^\star(2,d)$; in an inactive branch, at noise level $1$.
+\newline Now, let us fix a measurement setting
+$x$. By MUB symmetry, 
+$x$ belongs to exactly $k-1$
+ active branches and to $ \binom{k}{2} - (k-1) $ inactive ones. 
+By the affineness lemma the mixture equals $M^{\eta_{\text{eff}}}_{a|x}$
+with:
 
 
-Then, we can compute $\eta^*$ by using simple combinatorial principles.
-\newline Every measurement scenario appears with equal probability, hence, we divide by $\binom{k}{2}$, which is the number of scenarios,
- and we sum over the particular noise robustness of the measurements in each case. Then, instead of summing over measurements, we study appearance of each MUB in all measurements then multiply by $k$ since they all appear the same way.
-\newline
-Each MUB appears in $\binom{k-1}{1}$, since it is jointly measured once with each of the other pairwise strategies, and each of these strategies has a noise-robustness threshold of $\eta^{\star}(2, d)$, 
-then, in the rest($\binom{k}{2} - \binom{k-1}{1}$) of the scenarios it is measured by itself with robustness $1$.
-\newline Therefore, the formula for $\eta^*$ is given by:
+% Then, we can compute $\eta^*$ by using simple combinatorial principles.
+% \newline Every measurement scenario appears with equal probability, hence, we divide by $\binom{k}{2}$, which is the number of scenarios,
+%  and we sum over the particular noise robustness of the measurements in each case. Then, instead of summing over measurements, we study appearance of each MUB in all measurements then multiply by $k$ since they all appear the same way.
+% \newline
+% Each MUB appears in $\binom{k-1}{1}$, since it is jointly measured once with each of the other pairwise strategies, and each of these strategies has a noise-robustness threshold of $\eta^{\star}(2, d)$, 
+% then, in the rest($\binom{k}{2} - \binom{k-1}{1}$) of the scenarios it is measured by itself with robustness $1$.
+% \newline Therefore, the formula for $\eta^*$ is given by:
 \begin{equation}
 \begin{aligned}
-\eta^* &= \frac{1}{\binom{k}{2}} \left( \binom{k-1}{1} \eta^{\star}(2, d) + \left( \binom{k}{2} - \binom{k-1}{1} \right) \cdot 1 \right) 
+\eta_{\text{eff}} &= \frac{1}{\binom{k}{2}} \left( \binom{k-1}{1} \eta^{\star}(2, d) + \left( \binom{k}{2} - \binom{k-1}{1} \right) \cdot 1 \right) 
 \end{aligned} \end{equation}
+Symmetry guarantees that the same number of active branches cover every setting $x$, hence the mixture reconstructs the noisy MUB family uniformly.
 By simplifying, we get:
 \begin{equation}
 \begin{aligned}
-\eta^* &= \frac{2}{k(k-1)} ((k-1) \eta^*(2, d) + \frac{k(k-1)}{2} - (k - 1)) \\ 
-&= \frac{2}{k} (2 \eta^*(2, d) + k - 1) \\
+\eta_{\text{eff}} &= \frac{2}{k(k-1)} ((k-1) \eta^*(2, d) + \frac{k(k-1)}{2} - (k - 1)) \\ 
+&= \frac{1}{k} (2 \eta^*(2, d) + k - 2) \\
 &= 1 + \frac{1}{k} (\frac{2 + \sqrt{d}}{\sqrt{d} + 1} - 2) \\
-&= 1 - \frac{\sqrt{d}}{k(\sqrt{d} + 1)}
+&= 1 - \frac{\sqrt{d}}{k(\sqrt{d} + 1)} \label{eq:lower-bound-k-wise}
 \end{aligned}
 \end{equation} 
 
-In the results section, we will see that, for the cases we compute numerical values, this lower bound is tight, up to computational precision, which leads us to 
+In the results section, we will see that, for the cases we compute numerical values, this lower bound is certified by the SDP, which leads us to 
 believe that the optimal strategy in the general case is to choose each pairwise strategy with equal probability.
+Another thing to note about this lower bound (which holds for our computed values) is that it is \textbf{decreasing} in $d$, just like the noise-robustness threshold for Joint measurability,
+however it is \textbf{increasing} in $k$, unlike the threshold for Joint Measurability.
+\newline Let us develop on the latter conclusion in more detail: Adding a
+measurement to the full-JM hypergraph enlarges the parent POVM by a
+factor of $d$ and imposes one more marginal constraint, making the
+joint POVM strictly harder to find. Adding a measurement to the
+pairwise hypergraph, on the other hand, only adds new branches: the
+decomposition gains $k$ more sub-strategies, each of which has to honour
+the marginals of a single pair while leaving the remaining $k-2$
+measurements as arbitrary POVMs. The ``responsibility'' of any fixed
+measurement is consequently distributed across $k-1$ branches out of a
+total of $\binom{k}{2}$, a vanishing fraction $2/k$ that becomes
+negligible as $k$ grows. Quantitatively, this is exactly the
+hierarchy of compatibility hypergraphs introduced by
+Quintino~\emph{et al.}~\cite{Quintino2019}: finer hypergraphs (with
+more, smaller hyperedges) yield monotonically larger noise tolerances,
+and the all-pairs hypergraph -- being one of the finest non-trivial
+structures -- yields one of the loosest possible relaxations of full
+joint measurability.
+
 
 
 \newpage
 \section{Results}\label{sec:results}
 
+\paragraph{Numerical setup.}
+All SDPs were formulated with CVXPY and solved using
+\textsc{Clarabel} for the small cases $d^k \le 100$ and \textsc{Scs} with
+$\epsilon = 10^{-7}$, $\text{max\_iters} = 10^{5}$ for the larger ones,
+on a standard laptop CPU. Cells with $d^k > 3000$ were omitted from
+Table~\ref{tab:compat-prime} as the runtime exceeds 
+minutes; Table~\ref{tab:pairwise-compat} has no such cap since the
+pairwise SDP scales as $\mathcal{O}(k^3 d^2)$. Every closed-form entry
+in Tables~\ref{tab:compat-prime} and~\ref{tab:pairwise-compat} agreed
+with the analytical expression to within $10^{-4}$, and the solver
+reported \texttt{optimal} (never \texttt{optimal\_inaccurate}) status
+for all reported cells.
+
 In this section, we present the numerical results obtained. In the first table, we reproduce the noise-robustness thresholds for the joint measurability of $k$ MUBs, while in the second 
 table, we study the values obtained for the generalized $k$-wise incompatibility (for prime dimensions), that we obtained with our new generalized program.
-Note that we are able to expand the second table much more than the first one, which at first could seem counter intuitive since the pairwise hypergraph is generating more constraints on the optimization problem.
+Note that we are able to expand the second table much more than the first one, which at first could seem counterintuitive since the pairwise hypergraph is generating more constraints on the optimization problem.
 \newline However, the parent POVM of a Joint measurement has $d^k$ outcomes, hence in the full joint measurability scenario, we are optimizing over $d^k$ positive semidefinite matrices
 of size $d \times d$, a number that grows \emph{exponentially} with $k$.
 In contrast, the pairwise hypergraph contains $\binom{k}{2}$ branches,
 each of which carries a parent POVM with only $d^2$ outcomes plus
 $(k-2)$ independent single-measurement POVMs; the total variable count
-is therefore $\binom{k}{2}\bigl(d^2 + (k-2)\,d\bigr) = \mathcal{O}(k^3 d^2)$,
-which grows only \emph{polynomially} with $k$. The same gap shows up in
-the marginal constraints, where the full-JM SDP sums $d^{k-1}$ matrices
+is therefore $\binom{k}{2}\bigl(d^2 + (k-2)\,d\bigr) = \mathcal{O}(k^3 d + k^2 d^2)$,
+which grows only \emph{cubically} with $k$. The same gap shows up in
+the marginal constraints, where the full-Jointly Measurable SDP sums $d^{k-1}$ matrices
 per equality while the pairwise SDP sums only $d$ matrices per branch.
-Concretely, for $(k=8,\, d=7)$ the full-JM SDP would require
+Concretely, for $(k=8,\, d=7)$ the full-Jointly Measurable SDP would require
 $7^{8} \approx 5.76 \cdot 10^{6}$ matrix variables (intractable on any
 desktop), while the pairwise SDP requires
-$\binom{8}{2}(7^{2} + 6\cdot 7) = 2{,}548$ matrix variables and solves
-in seconds; this is why the second table can be populated for every
-$(k, d)$ in our range whereas the first cannot.
+$\binom{8}{2}(7^{2} + 6\cdot 7) = 2{,}548$ matrix variables which can
+be solved in seconds, even on CPU. For this reason, we were able to 
+populate table ~\ref{tab:pairwise-compat} up to $k = 11$ and $d = 9$ in less than 10 minutes, 
+while having to omit even a few seemingly small entries from table ~\ref{tab:compat-prime}, such as $(k, d) = (5,5)$.
 
 
 \begin{table}[h]
@@ -991,8 +1047,8 @@ $(k, d)$ in our range whereas the first cannot.
            measurability of $k$ MUBs in prime dimension $d$. Closed-form
            entries are taken from \cite{Designolle2019} (or, for the
            complete set $k = d+1$, from its Theorem~1, which gives
-           $\eta^{\star}(d+1, d) = 1/\sqrt{d+1}$); cells marked ``?''
-           are to be obtained by direct SDP optimisation. ``---'' marks
+           $\eta^{\star}(d+1, d) = 1/\sqrt{d+1}$); cells marked ``X''
+           have been omitted due to computational complexity; the closed forms can be found in \cite{Designolle2019}. ``---'' marks
            cells with $k > d+1$, for which fewer than $k$ MUBs exist.}
   \label{tab:compat-prime}
   \renewcommand{\arraystretch}{1.4}
@@ -1015,16 +1071,16 @@ $(k, d)$ in our range whereas the first cannot.
         & 0.4615  &  0.4436 \\
     $5$ & ---
         & ---
-        & $?$
-        & $?$ \\
+        & $X$
+        & $X$ \\
     $6$ & ---
         & ---
         & $\tfrac{1}{\sqrt{6}}\!\approx\!0.4082$
-        & $?$ \\
+        & $X$ \\
     $7$ & ---
         & ---
         & ---
-        & $?$ \\
+        & $X$ \\
     $8$ & ---
         & ---
         & ---
@@ -1035,14 +1091,13 @@ $(k, d)$ in our range whereas the first cannot.
 
 \begin{table}[h]
   \centering
-  \caption{Numerical values for $(k\!-\!1)$ compatibility:
-           noise-robustness thresholds for the compatibility hypergraph
-           consisting of all $(k\!-\!1)$-element subsets of $k$ MUBs in
-           prime dimension $d$ (the natural relaxation of full joint
-           measurability discussed in
-           Appendix~\ref{app:hypergraph-helpers}). ``---'' marks cells
-           with $k > d+1$.}
-  \label{tab:k-minus-1-compat}
+  \caption{Noise-robustness thresholds for the all-pairs compatibility hypergraph on $k$ MUBs in prime dimension $d$, computed 
+  by the SDP of Section~5.3 with hypergraph \texttt{hypergraph\_pair(k)}. The 
+  hyperedges are all $\binom{k}{2}$ pairs of settings; below the threshold the noisy MUB family admits a convex decomposition 
+  into pairwise-jointly-measurable sub-experiments and is therefore not genuinely incompatible with respect to 
+  this structure. All entries coincide with the closed form $\eta^\star = 1 - \sqrt{d}/(k(\sqrt{d}+1))$ derived in 
+  Eq. ~\ref{eq:lower-bound-k-wise}, confirming optimality of the equal-weight pairwise mixture to solver precision. ``---'' marks cells with $k > d+1$.}
+  \label{tab:pairwise-compat}
   \renewcommand{\arraystretch}{1.4}
   \begin{tabular}{c|ccccc}
     \hline
@@ -1050,27 +1105,88 @@ $(k, d)$ in our range whereas the first cannot.
     \cline{2-6}
     $k$ & $2$ & $3$ & $5$ & $7$ & $11$ \\
     \hline
-    $2$ & 0.7071 & 0.6830 & 0.6545 & 0.6371 &  \\
-    $3$ & 0.8047 & 0.7887 & 0.7697 & 0.7581 & \\
-    $4$ &    ---     &  0.8415  &  0.8273  &  0.8186  & \\
-    $5$ &    ---     &    ---   &  0.8618  &  0.8549  & \\
-    $6$ & --- & --- &0.8848  &  0.8790 & \\
-    $7$ & --- & --- & --- & 0.8963 & \\
-    $8$ & --- & --- & --- & 0.9093 & \\
-    $9$ & --- & --- & --- &   & \\
-    $10$ & --- & --- & --- &   & \\
-    $11$ & --- & --- & --- &   & \\
-    $12$ & --- & --- & --- &   & \\
+    2  &  0.7071  &  0.6830  &  0.6545  &  0.6371  &  0.6158   \\
+    3  &  0.8047  &  0.7887  &  0.7697  &  0.7581  &  0.7439   \\
+    4  &    ---     &  0.8415  &  0.8273  &  0.8186  &  0.8079   \\
+    5  &    ---     &    ---     &  0.8618  &  0.8549  &  0.8463   \\
+    6  &    ---     &    ---     &  0.8848  &  0.8791  &  0.8719   \\
+    7  &    ---     &    ---     &    ---     &  0.8963  &  0.8902   \\
+    8  &    ---     &    ---     &    ---     &  0.9093  &  0.9040   \\
+    9  &    ---     &    ---     &    ---     &    ---     &  0.9146  \\
     \hline
   \end{tabular}
 \end{table}
 
+\FloatBarrier   % flush both Results tables before the next section starts
 % \newpage
+
 \section{Conclusion and Outlook}
-In this paper we have reviewed the recent literature on the joint measurability of quantum measurements, while reproducing some of the known numerical results on the noise-robustness thresholds for the joint measurability of $k$ MUBs in prime dimension $d$ by implementing the standard robustness SDP. 
-We then generalised this program to arbitrary compatibility hypergraphs, and used this generalisation to obtain new numerical results on the noise-robustness thresholds for the $(k)$-wise incompatibility case. We found an analytical lower bound for this program, which is tight for the cases where we computed numerical values.
-\newline
-\paragraph{Going further,} a natural next step would be to prove tightness of this lower bound by implementing the Dual SDP, which yields an (analytical) upper bound.
+
+In this work we reviewed the recent literature on the joint
+measurability of quantum measurements and reproduced, by explicitly
+formulating and solving the corresponding SDP, the known
+noise-robustness thresholds for the joint measurability of $k$ MUBs in
+prime dimension $d$. We then generalised this program to arbitrary
+compatibility hypergraphs, exposing a single framework in which full
+joint measurability is the trivial case. Using this
+generalisation we computed new noise-robustness thresholds for the
+all-pairs hypergraph and derived a closed-form analytical lower bound
+that, in every case we checked numerically, is certified by the SDP to
+solver precision.
+
+\paragraph{Numerical contribution.}
+Across $d \in \{2, 3, 5, 7, 11\}$ and all valid $k$, our SDP
+reproduces every closed-form entry of Designolle
+\emph{et al.}~\cite{Designolle2019} to within $10^{-4}$ (Table~\ref{tab:compat-prime})
+and extends the table to the all-pairs hypergraph
+(Table~\ref{tab:pairwise-compat}), with every entry matching the
+analytical bound $\eta^{\star} = 1 - \sqrt{d}/[\,k(\sqrt{d}+1)\,]$
+of \eqref{eq:lower-bound-k-wise}.
+
+\paragraph{Qualitative findings.}
+The most striking qualitative finding is that the noise-robustness
+threshold of the pairwise hypergraph is \textbf{monotonically increasing}
+in $k$, while the corresponding threshold for full joint measurability
+is \textbf{monotonically decreasing} in $k$. The two thresholds therefore
+diverge as $k$ grows: full joint measurability becomes harder, whereas
+pairwise compatibility becomes easier, because each measurement's
+``responsibility'' in a pairwise decomposition is distributed across
+$k-1$ of the $\binom{k}{2}$ branches -- a vanishing fraction~$2/k$.
+This is the quantitative illustration, on the MUB family, of the
+hierarchy of compatibility hypergraphs introduced by
+Quintino~\emph{et al.}~\cite{Quintino2019}, and it sharply illustrates
+why genuine $k$-wise incompatibility is a strictly stronger notion than
+pairwise incompatibility.
+
+\paragraph{Going further.}
+Three directions follow naturally from this work.
+\begin{enumerate}
+  \item[(i)] \emph{A tightness certificate.} Implementing the dual SDP
+        would either prove tightness of \eqref{eq:lower-bound-k-wise}
+        analytically -- by exhibiting a feasible dual witness whose
+        objective matches $1 - \sqrt{d}/[\,k(\sqrt{d}+1)\,]$ -- or
+        identify the regime where the equal-weight pairwise mixture is
+        sub-optimal.
+  \item[(ii)] \emph{Intermediate hypergraphs.} Between the two extremes
+        we studied lies a rich lattice of compatibility hypergraphs --
+        all triples, all $(k\!-\!2)$-subsets, asymmetric structures,
+        and so on. Our framework already handles these without further
+        modification; only their analytical behaviour remains
+        unexplored.
+  \item[(iii)] \emph{Composite dimensions.} The Wootters--Fields
+        construction guarantees $d+1$ MUBs only for prime-power $d$;
+        in $d = 6$ no fourth MUB has ever been found, and it is widely
+        conjectured that none exists~\cite{Guhne2023}. Running the
+        same hypergraph SDP for the three known MUBs in $d = 6$, and
+        comparing the result to the prime-dimension pattern, would
+        provide indirect evidence on this longstanding open question.
+\end{enumerate}
+
+
+\section*{Acknowledgements}
+I am grateful to my advisors Marc-Olivier Renou and Lucas-Amadeus
+Tendick for their guidance throughout this project, as well as to the
+\textsc{PhIQuS} group at Inria Paris-Saclay for hosting me.
 
 \newpage
 \bibliographystyle{plain}
@@ -1087,7 +1203,7 @@ We then generalised this program to arbitrary compatibility hypergraphs, and use
 
 The Python function below implements the white-noise robustness SDP
 generalised to an arbitrary compatibility hypergraph~$C$, as discussed in
-Section~\ref{sec:sdp-2qubit}. It is built on top of CVXPY and delegates
+Section~\ref{sec:generalization-pairwise-jm}. It is built on top of CVXPY and delegates
 variable creation, base constraints and inter-branch gluing to the
 helper routines \texttt{\_build\_variables},
 \texttt{\_base\_constraints} and \texttt{\_glue\_terms} (defined in the
@@ -1121,6 +1237,20 @@ def robustness_hypergraph(M, hypergraph, *,
     return float(eta.value), prob.status
 \end{lstlisting}
 
+\begin{lstlisting}[style=python,
+                   caption={\texttt{\_glue\_terms}: helper function that builds the list of contributions from each branch to $M_{x|a}$.},
+                   label=lst:glue-terms]
+def _glue_terms(x, a, hypergraph, E, J_outside):
+    """For (x, a), build the list of contributions from each branch to M[x, a]."""
+    terms = []
+    for i, edge in enumerate(hypergraph):
+        if x in edge:
+            terms.append(_marginal_E(E[i], edge, x, a))
+        else:
+            terms.append(J_outside[i][x][a])
+    return terms
+\end{lstlisting}
+
 \subsection{The two hypergraphs we provide in the above function to generate our results}
 \label{app:hypergraph-helpers}
 
@@ -1138,7 +1268,7 @@ def hypergraph_compatible(k):
     hypergraph = [tuple(range(k))]
     return hypergraph
 
-def hyperg_pair(k):
+def hypergraph_pair(k):
     """Compatibility hypergraph with all pairs of POVMs."""
     hypergraph = [tuple(edge) for edge in itertools.combinations(range(k), 2)]
     return hypergraph
@@ -1160,7 +1290,7 @@ classical noise-robustness thresholds tabulated in Table~I of
 available---no other hypergraph yields a smaller~$\eta^{\star}$.
 
 \paragraph{All pairs:
-\texttt{hyperg\_pair(k)}.}
+\texttt{hypergraph\_pair(k)}.}
 This returns the hypergraph
 $C = \{\,(j, \ell) : 0 \le j < \ell \le k-1\,\}$ consisting of all
 $\binom{k}{2}$ unordered pairs. Each branch~$i$ corresponds to one

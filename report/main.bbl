@@ -1,11 +1,5 @@
 \begin{thebibliography}{1}
 
-\bibitem{EP_FMA2S006}
-Martin~Leguil Damian~Brotbek, Annalaura~Stingo.
-\newblock {\em {FMA-2S006}: Euclidean and {Hermitian} spaces}.
-\newblock 2026.
-\newblock Bachelor of Science course-support.
-
 \bibitem{Designolle2019}
 S\'ebastien Designolle, Paul Skrzypczyk, Florian Fr\"owis, and Nicolas Brunner.
 \newblock Quantifying measurement incompatibility of mutually unbiased bases.
@@ -21,6 +15,11 @@ Otfried G\"uhne, Erkka Haapasalo, Tristan Kraft, Juha-Pekka Pellonp\"a\"a, and
 T.~Heinosaari, J.~Kiukas, and D.~Reitzner.
 \newblock Noise robustness of the incompatibility of quantum measurements.
 \newblock {\em Phys. Rev. A}, 92:022115, 2015.
+
+\bibitem{Quantum-Computation-and-Quantum-Information}
+Michael~A. Nielsen and Isaac~L. Chuang.
+\newblock {\em Quantum Computation and Quantum Information}.
+\newblock Cambridge University Press, 10th anniversary edition edition, 2010.
 
 \bibitem{Quintino2019}
 Marco~T\'ulio Quintino, Costantino Budroni, Erik Woodhead, Ad\'an Cabello, and

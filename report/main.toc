@@ -5,29 +5,35 @@
 \contentsline {paragraph}{Joint measurability as a semidefinite program.}{5}{section*.4}%
 \contentsline {paragraph}{Quantifying incompatibility: noise robustness.}{5}{section*.5}%
 \contentsline {paragraph}{Structures of incompatibility.}{6}{section*.6}%
-\contentsline {section}{\numberline {3}Outline and goal of the project}{6}{section.3}%
+\contentsline {section}{\numberline {3}Outline and goal of the project}{7}{section.3}%
+\contentsline {paragraph}{Reproducing the joint-measurability baseline.}{7}{section*.7}%
+\contentsline {paragraph}{Generalising to arbitrary compatibility hypergraphs.}{7}{section*.8}%
+\contentsline {paragraph}{Producing new numerical thresholds for the all-pairs hypergraph.}{7}{section*.9}%
+\contentsline {paragraph}{Deriving and certifying an analytical lower bound.}{7}{section*.10}%
 \contentsline {section}{\numberline {4}Definitions and Concepts}{8}{section.4}%
 \contentsline {subsection}{\numberline {4.1}Hermitian operators}{8}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}Quantum states, density operators and quantum measurements}{8}{subsection.4.2}%
 \contentsline {subsection}{\numberline {4.3}Mutually unbiased basis (MUBs)}{9}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Quantum States}{9}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Quantum Measurements}{10}{subsection.4.5}%
-\contentsline {paragraph}{Indexed families of POVMs.}{10}{section*.7}%
-\contentsline {subsection}{\numberline {4.6}Joint Measurability and Incompatibility}{11}{subsection.4.6}%
-\contentsline {subsection}{\numberline {4.7}Semi Definite Programming (SDP)}{11}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.4}Quantum Measurements}{9}{subsection.4.4}%
+\contentsline {paragraph}{Indexed families of POVMs.}{10}{section*.11}%
+\contentsline {subsection}{\numberline {4.5}Joint Measurability and Incompatibility}{10}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Semi Definite Programming (SDP)}{11}{subsection.4.6}%
 \contentsline {section}{\numberline {5}Joint Measurability SDP}{12}{section.5}%
 \contentsline {subsection}{\numberline {5.1}A first example: two noisy Pauli measurements on a qubit}{12}{subsection.5.1}%
-\contentsline {paragraph}{Result.}{12}{section*.8}%
-\contentsline {paragraph}{Noise Robustness SDP}{13}{section*.9}%
+\contentsline {paragraph}{Result.}{12}{section*.12}%
+\contentsline {paragraph}{Noise Robustness SDP}{13}{section*.13}%
 \contentsline {subsection}{\numberline {5.2}Generalization of the robustness SDP to k MUB measurements with m outcomes}{13}{subsection.5.2}%
-\contentsline {paragraph}{}{13}{figure.2}%
-\contentsline {subsection}{\numberline {5.3}Generalization of the robustness SDP to pairwise Jointly measurable hypergraphs}{14}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.3}Generalization of the robustness SDP to pairwise jointly measurable hypergraphs}{14}{subsection.5.3}%
+\contentsline {paragraph}{}{14}{figure.2}%
 \contentsline {section}{\numberline {6}Results}{17}{section.6}%
-\contentsline {section}{\numberline {7}Conclusion and Outlook}{17}{section.7}%
-\contentsline {paragraph}{Going further,}{18}{section*.13}%
-\contentsline {section}{\numberline {8}References}{19}{section.8}%
-\contentsline {section}{\numberline {A}Appendix}{20}{appendix.A}%
-\contentsline {subsection}{\numberline {A.1}Hypergraph-parameterized robustness SDP}{20}{subsection.A.1}%
-\contentsline {subsection}{\numberline {A.2}The two hypergraphs we provide in the above function to generate our results}{20}{subsection.A.2}%
-\contentsline {paragraph}{Full joint measurability: \texttt {hypergraph\_compatible(k)}.}{20}{section*.14}%
-\contentsline {paragraph}{All pairs: \texttt {hyperg\_pair(k)}.}{21}{section*.15}%
+\contentsline {paragraph}{Numerical setup.}{17}{section*.17}%
+\contentsline {section}{\numberline {7}Conclusion and Outlook}{18}{section.7}%
+\contentsline {paragraph}{Numerical contribution.}{18}{section*.18}%
+\contentsline {paragraph}{Qualitative findings.}{18}{section*.19}%
+\contentsline {paragraph}{Going further.}{18}{section*.20}%
+\contentsline {section}{\numberline {8}References}{20}{section.8}%
+\contentsline {section}{\numberline {A}Appendix}{21}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Hypergraph-parameterized robustness SDP}{21}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}The two hypergraphs we provide in the above function to generate our results}{21}{subsection.A.2}%
+\contentsline {paragraph}{Full joint measurability: \texttt {hypergraph\_compatible(k)}.}{22}{section*.22}%
+\contentsline {paragraph}{All pairs: \texttt {hypergraph\_pair(k)}.}{22}{section*.23}%
