@@ -9,7 +9,7 @@ theta = 2 pi / 3 where we conjecture eta* = (1 + sqrt(3)) / 3.
 import numpy as np
 import matplotlib.pyplot as plt
 
-from incompatibility_sdp import robustness_eq12
+from scripts.incompatibility_sdp import robustness_eq12
 
 
 # ----------------------------------------------------------------------

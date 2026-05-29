@@ -148,7 +148,7 @@ def robustness_hypergraph(M, hypergraph, *,
 # Demo: walk up the lattice of compatibility hypergraphs
 # ----------------------------------------------------------------------
 
-from incompatibility_sdp import noisy_pauli_measurements
+from scripts.incompatibility_sdp import noisy_pauli_measurements
 def _demo():
 
     print("=" * 74)
@@ -184,7 +184,7 @@ def _demo():
     print("Adding the big edge (0,1,2) tightens the constraints the most;")
     print("breaking it into pairs is more permissive (higher eta*).")
 
-from mub_joint_measurability import mubs_d2, mubs_d3, mubs_d4, noisy_mubs_d3
+from scripts.mub_joint_measurability import mubs_d2, mubs_d3, mubs_d4, noisy_mubs_d3
 
 def hypergraph_compatible(k):
     """Compatibility hypergraph for the given number of POVMs."""

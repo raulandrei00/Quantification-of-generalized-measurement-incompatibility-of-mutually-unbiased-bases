@@ -1,0 +1,7 @@
+ex 2.4 sdp book
+
+chapter 6: 6.1
+
+https://arxiv.org/pdf/2112.06784 eq. (5)
+
+code compatibility SDP (joint measurement)

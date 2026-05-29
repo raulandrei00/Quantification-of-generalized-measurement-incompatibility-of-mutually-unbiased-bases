@@ -9,7 +9,7 @@ eta* * (1 ± epsilon).
 import numpy as np
 from scipy.linalg import expm
 
-from incompatibility_sdp import (
+from scripts.incompatibility_sdp import (
     feasibility_eq10,
     robustness_eq12,
     noisy_pauli_measurements,
